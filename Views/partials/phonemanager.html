@@ -1,0 +1,29 @@
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                            <div class="panel panel-info">
+                                <div class="panel-heading" role="tab" id="strategies">
+                                    <h4 class="panel-title clearfix">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#straContent" aria-expanded="true" aria-controls="straContent">
+                                            Phones
+                                        </a>
+                                    <span class="pull-right">
+                                    <span class="label label-warning"> {{ phones.length }} </span>
+                                    </span>
+                                    </h4>
+                                </div>
+                                <div id="straContent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="strategies">
+                                    <div class="panel-body">
+
+                                        <div class="list-group" ng-repeat="phone in phones">
+                                            <a href="#" class="list-group-item clearfix">
+                                                <i class="fa fa-fw fa-mobile "></i> {{ phone.phoneNo }}
+                                            <span class="pull-right">
+                                                <button class="btn btn-xs btn-danger" ng-click="deletePhone(phone);">
+                                                    <i class="fa fa-fw fa-trash"></i>
+                                                </button>
+                                            </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>

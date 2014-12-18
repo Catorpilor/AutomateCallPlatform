@@ -1,51 +1,7 @@
 {% extends '../template/layout.html' %}
 {% block title %}{{ title }}{% endblock %}
 {% block content %}
-    <div id="wrapper">
-        <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Admin</a>
-            </div>
-            <!-- Top Menu Items -->
-            <ul class="nav navbar-right top-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {{ user }} <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="/logout"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li class="active">
-                        <a href="/user/{{ user }}"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
-                    </li>
-                    <!--<li>-->
-                        <!--<a href="/user/{{ user }}/strategy"><i class="fa fa-fw fa-bar-chart"></i> Strategy</a>-->
-                    <!--</li>-->
-                    <!--<li>-->
-                        <!--<a href="/user/{{ user }}/phonenos"><i class="fa fa-fw fa-bar-table"></i> PhoneNo</a>-->
-                    <!--</li>-->
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </nav>
-        <div id="page-wrapper">
+           <div id="page-wrapper">
 
             <div class="container-fluid">
 
@@ -60,19 +16,48 @@
                                 <i class="fa fa-dashboard"></i>  <a href="/user/{{ user }}">Dashboard</a>
                             </li>
                             <li class="active">
-                                <i class="fa fa-table"></i> Phone Books
+                                <i class="fa fa-table"></i> Phone Manager
                             </li>
-                            <span class="pull-right">
-                            <li>
-                                <a href="#"> <i class="fa fa-plus"></i> Phone </a>
-                            </li>
-                        </span>
+<!--                             <span class="pull-right"> -->
+<!--                             <li> -->
+<!--                                 <a href="#"> <i class="fa fa-plus"></i> Phone </a> -->
+<!--                             </li> -->
+<!--                         </span> -->
                         </ol>
                     </div>
                 </div>
+<!--                 <div class="row"> -->
+<!--                     <div ng-init="friends = [ -->
+<!--                         {name:'John', age:25, gender:'boy'}, -->
+<!--                         {name:'Jessie', age:30, gender:'girl'}, -->
+<!--                         {name:'Johanna', age:28, gender:'girl'}, -->
+<!--                         {name:'Joy', age:15, gender:'girl'}, -->
+<!--                         {name:'Mary', age:28, gender:'girl'}, -->
+<!--                         {name:'Peter', age:95, gender:'boy'}, -->
+<!--                         {name:'Sebastian', age:50, gender:'boy'}, -->
+<!--                         {name:'Erika', age:27, gender:'girl'}, -->
+<!--                         {name:'Patrick', age:40, gender:'boy'}, -->
+<!--                         {name:'Samantha', age:60, gender:'girl'} -->
+<!--                     ]"> -->
+<!--                         I have [[friends.length]] friends. They are:  -->
+<!--                         <input type="search" ng-model="q" placeholder="filter friends..." /> -->
+<!--                         <ul class="example-animate-container"> -->
+<!--                             <li class="animate-repeat" ng-repeat="friend in friends"> -->
+<!--                                 [[$index + 1]] [[friend.name]] who is [[friend.age]] years old. -->
+<!--                             </li> -->
+<!--                         </ul> -->
+<!--                     </div> -->
+<!--                </div> -->
                 <div class="row">
                     <div class="col-lg-12 ">
-                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+<!--                     <div ng-view="" id="ng-view"></div> -->
+                        <div ng-controller="phoneManageController">
+<!--                         <ul> -->
+<!--                         <li ng-repeat="phone in phones"> -->
+<!--                             [[$index+1]] -->
+<!--                         </li> -->
+<!--                         </ul> -->
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" >
                             <div class="panel panel-info">
                                 <div class="panel-heading" role="tab" id="strategies">
                                     <h4 class="panel-title clearfix">
@@ -80,32 +65,35 @@
                                             Phones
                                         </a>
                                     <span class="pull-right">
-                                    <span class="label label-warning"> {{ phones.length }} </span>
+                                        <button type="button" class="btn btn-primary fa fa-plus" ng-click="open('sm');">&nbsp;Phone</button>
                                     </span>
                                     </h4>
                                 </div>
                                 <div id="straContent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="strategies">
                                     <div class="panel-body">
-
-                                        <div class="list-group">
-                                            {% for phone in phones %}
-                                            <a href="#" class="list-group-item clearfix">
-                                                <i class="fa fa-fw fa-mobile "></i> {{ phone.phoneNo }}
+                                        <div class="list-group" >
+                                            <a href="#" class="list-group-item clearfix" ng-repeat="phone in phones">
+                                                <i class="fa fa-fw fa-mobile "></i> [[phone.PHONE_NUM]]
                                             <span class="pull-right">
-                                                <button class="btn btn-xs btn-danger">
+                                                <button class="btn btn-xs btn-danger" ng-click="deletePhone(phone);">
                                                     <i class="fa fa-fw fa-trash"></i>
                                                 </button>
                                             </span>
                                             </a>
-                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+{% endblock %}
+
+{% block postscript %}
+{% parent %}
+<script src="/js/underscore.js"></script>
+<script src="/js/controllers/phoneManageController.js"></script>
 {% endblock %}

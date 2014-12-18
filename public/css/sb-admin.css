@@ -34,7 +34,8 @@ body {
 
 @media(min-width:768px) {
     #wrapper {
-        padding-left: 225px;
+        padding-left: 5px;
+        padding-right:5px;
     }
 
     #page-wrapper {

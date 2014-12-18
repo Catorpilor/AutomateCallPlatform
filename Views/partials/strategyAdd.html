@@ -1,0 +1,48 @@
+<button type="button" class="close" ng-click="cancel();">
+<i class="fa fa-times-circle-o" style="margin:10px;color:blue;"></i>
+</button>
+<div class="modal-header">
+<h3 class="modal-title">[[ title ]]</h3>
+</div>
+<div class="modal-body">
+<form name="strategy_form" class="form-horizontal" role="form" novalidate>
+	<form-element label="TACTICS_NAME" mod="strategy">
+		<input type="text" class="form-control" name="tac_name" placeholder="Enter strategy name" ng-model="strategy.TACTICS_NAME" />
+	</form-element>
+ 	<form-element label="CALL_DURATION" mod="strategy">
+ 	<input type="text" class="form-control" name="call_duration" placeholder="Call duration eg 10s" ng-model="strategy.CALL_DURATION"/>
+ 	<small class="errorMessage" ng-show="strategy_form.call_duration.$dirty && strategy_form.call_duration.$invalid"> Enter the call_duration.</small>
+ 	</form-element>
+ 	<form-element label="CALL_INTERVAL" mod="strategy">
+ 		<input type="text" name="callinterval" class="form-control" placeholder="Call interval eg 5s" ng-model="strategy.CALL_INTERVAL"  only-numbers/>
+ 		<small class="errorMessage" ng-show="strategy_form.callinterval.$dirty && strategy_form.callinterval.$invalid"> Enter the callinterval.</small>
+ 	</form-element>
+
+  <form-element label="CALL_TIMES" mod="strategy">
+ 		<input type="text" name="calltimes" class="form-control" placeholder="Call times eg 5" ng-model="strategy.CALL_TIMES" only-numbers/>
+ 		<small class="errorMessage" ng-show="strategy_form.calltimes.$dirty && strategy_form.calltimes.$invalid"> Enter the available calltimes.</small>
+ 	</form-element>
+
+ 	<form-element label="CALL_DISPLAY" mod="strategy">
+ 		<input type="text" name="callani" class="form-control" placeholder="Call display number" ng-model="strategy.CALL_DISPLAY"/>
+ 		<small class="errorMessage" ng-show="strategy_form.callani.$dirty && strategy_form.callani.$invalid"> Enter the callani.</small>
+ 	</form-element>
+
+	<div class="space"></div>
+	<div class="space-4"></div>
+	<div class="modal-footer">
+		<form-element label="">
+			<div class="text-right">
+				<a class="btn btn-sm" ng-click="cancel()"><i class="ace-icon fa fa-reply"></i>Cancel</a>
+				<button ng-click="saveStrategy(strategy);"
+						ng-disabled="strategy_form.$invalid || enableUpdate"
+						class="btn btn-sm btn-primary"
+						type="submit">
+					<i class="ace-icon fa fa-check"></i>[[buttonText]]
+				</button>
+			</div>
+		</form-element>
+	</div>
+</form>
+</div>
+

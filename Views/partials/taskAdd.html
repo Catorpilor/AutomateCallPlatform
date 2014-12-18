@@ -1,0 +1,45 @@
+<button type="button" class="close" ng-click="cancel();">
+<i class="fa fa-times-circle-o" style="margin:10px;color:blue;"></i>
+</button>
+<div class="modal-header">
+<h3 class="modal-title">[[title]]</h3>
+</div>
+<div class="modal-body">
+	<div class="input-group">
+	  <span class="input-group-addon">@</span>
+	  <input type="text" class="form-control" placeholder="Task Name" ng-model="taskName">
+	</div>
+	<hr/>
+	<h4>Select phones:</h4>
+	<div class="btn-group">
+        <label class="btn btn-primary" ng-model="phone.status" ng-class="{true:'btn-success', false:''}[phone.status]" ng-repeat="phone in phones" btn-checkbox>[[phone.PHONE_NUM]]</label>
+        <!-- <label class="btn btn-primary" ng-model="checkModel.middle" btn-checkbox>Middle</label>
+        <label class="btn btn-primary" ng-model="checkModel.right" btn-checkbox>Right</label> -->
+  </div>
+  <hr/>
+  <h4>Select Strategy:</h4>
+	<div class="btn-group">
+        <label class="btn btn-info" ng-model="radioModel" btn-radio="stra.PK_TACTICS" ng-repeat="stra in strategies">[[stra.TACTICS_NAME]]</label>
+        <!-- <label class="btn btn-primary" ng-model="checkModel.middle" btn-checkbox>Middle</label>
+        <label class="btn btn-primary" ng-model="checkModel.right" btn-checkbox>Right</label> -->
+  </div>
+	<hr/>
+	<button type="button" class="btn" ng-model="singleModel" ng-class="{1:'btn-success', 2:''}[singleModel]" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="2">
+        Active Now
+  </button>
+	<div class="space"></div>
+	<div class="space-4"></div>
+	<div class="modal-footer">
+			<div class="text-right">
+				<a class="btn btn-sm" ng-click="cancel()"><i class="ace-icon fa fa-reply"></i>Cancel</a>
+				<button ng-click="addTask();"
+						ng-disabled="phone_form.$invalid"
+						class="btn btn-sm btn-primary"
+						type="submit">
+					<i class="ace-icon fa fa-check"></i>[[buttonText]]
+				</button>
+			</div>
+	</div>
+</form>
+</div>
+
