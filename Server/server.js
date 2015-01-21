@@ -32,6 +32,7 @@ app.use('/js',express.static(path.join(__dirname, "/../public/js")));
 app.use('/css',express.static(path.join(__dirname,"/../public/css")));
 app.use('/bower_components',express.static(path.join(__dirname,"/../public/bower_components")));
 app.use('/font-awesome',express.static(path.join(__dirname,"/../public/font-awesome")));
+app.use('/fonts',express.static(path.join(__dirname,"/../public/fonts")));
 app.use(myConnection(mysql,config.mysql_option,'single'));
 //app.use(cors());
 

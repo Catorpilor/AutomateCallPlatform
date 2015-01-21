@@ -1,6 +1,4 @@
-//var _ = require("lodash");
-
-exports.getPhonesByQuery = function (connection,query,opt,callback) {
+exports.getSoundsByQuery = function (connection,query,opt,callback) {
   var sqlquery = connection.query(query,opt,function(err,results){
     if(err) callback(err);
     if(results.length == 0 ) callback(null,[]);
@@ -9,10 +7,3 @@ exports.getPhonesByQuery = function (connection,query,opt,callback) {
   });
   console.log(sqlquery.sql);
 };
-
-
-
-
-//exports.addPhonesByQuery = function (connection,query,opt,callback) {
-//
-//}

@@ -22,12 +22,22 @@ router.delete('/strategy',apis.deleteStrategy);
 //get tasks
 //
 router.get('/task',apis.getTasks);
-router.get('/tasksDetail',apis.getTaskDetails);
+router.get('/taskDetail',apis.getTaskDetails);
 router.post('/task',apis.postTask);
 router.post('/taskDetail',apis.postTaskDetail);
 router.put('/taskDetail',apis.updateTaskDetail);
 router.delete('/taskDetail',apis.deleteTaskDetail);
 
+
+router.get('/reports',apis.getReports);
+router.get('/reports_b',apis.getBasicReports);
+
+//app interface
+router.post('/register',apis.checkRegister);
+router.get('/tasks',apis.getTaskLists);
+router.get('/taskRecords',apis.getTaskRecords);
+router.get('/taskDetail/:taskid',apis.getTaskDetail);
+router.post('/addTask',apis.addTask);
 
 
 module.exports = router;

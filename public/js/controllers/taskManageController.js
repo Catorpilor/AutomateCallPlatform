@@ -142,7 +142,7 @@ app.controller('taskAddCtrl',['$scope','$modalInstance','$resource','item','phon
       $modalInstance.dismiss('Close');
   };
 
-  $scope.radioModel = $scope.strategies[0].PK_TACTICS;
+  $scope.radio = {model: $scope.strategies[0].PK_TACTICS};
 
   $scope.taskName='';
 
@@ -150,7 +150,7 @@ app.controller('taskAddCtrl',['$scope','$modalInstance','$resource','item','phon
   $scope.addTask = function() {
     var x = {};
     x.TASK_NAME = $scope.taskName;
-    var stra = _.where($scope.strategies,{'PK_TACTICS':$scope.radioModel});
+    var stra = _.where($scope.strategies,{'PK_TACTICS':$scope.radio.model});
     x.phones = _.where($scope.phones,{'status':true});
     -(x.phones).forEach(function(obj) {
       obj.CALL_DISPLAY = stra[0].CALL_DISPLAY;
@@ -171,6 +171,7 @@ app.controller('taskAddCtrl',['$scope','$modalInstance','$resource','item','phon
               var ids = result.insertId*1;
               -(x.phones).forEach(function(obj) {
                 obj.PK_TASKDETAIL = ids++;
+                obj.PK_TASK = x.PK_TASK;
               });
               $modalInstance.close(x);
             }

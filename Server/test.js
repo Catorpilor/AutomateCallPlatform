@@ -1,6 +1,7 @@
 var eventproxy = require('eventproxy');
 var fs = require('fs');
 var _ = require("lodash");
+var crypto = require("crypto");
 
 //var ep = new eventproxy();
 //var a =['./api_v1_router.js','./server.js','./web_router'];
@@ -70,8 +71,18 @@ var persons=[
 		name: 'jian',
 		age:22,
 		group: 'Group C'
+	},{
+		name: 'gong',
+		age:23,
+		group: 'Group C'
 	}
 ];
+
+var newt = _.where(persons,function (per) {
+	return per.age <= 22;
+});
+
+console.log(newt);
 //
 //var phones=[
 //	{
@@ -252,3 +263,87 @@ console.log(_.findWhere(tasks,{PK_TASK:5}).phones);
 _.findWhere(tasks,{PK_TASK:5}).phones = _.without(_.findWhere(tasks,{PK_TASK:5}).phones, _.findWhere(_.findWhere(tasks,{PK_TASK:5}).phones, {PK_TASKDETAIL:6}));
 
 console.log(tasks[0].phones);
+
+var md5 = crypto.createHash('md5');
+var password = md5.update('1234').digest('base64');
+console.log(password);
+
+console.log(new Buffer("1234").toString('base64'));
+
+//var configs = {maxmemcount:"MzA=",maxconfcount:"Mw=="};
+//var mems = new Buffer(configs.maxmemcount,'base64');
+//console.log(mems.toString());
+fs.readFile('config.js','utf-8',function(err,data){
+	if(err) throw err;
+
+	data = JSON.parse(data);
+		console.log(data);
+//	data = JSON.parse(data);
+//	var mems = new Buffer(data.maxmemcount,'base64');
+//	mems = mems.toString();
+//	var confs = new Buffer(data.maxconfcount,'base64');
+//	confs = confs.toString();
+//	res.render('padmin', {title: '管理员界面', curnum: pdocs.length-1, maxmem: mems*1, maxconfs: confs*1});
+});
+var starttime = '2014-12-31T13:50';
+var s = starttime.replace('T',' ').replace('Z','');
+
+
+var duretime = '120';
+console.log(duretime);
+
+var endtime = new Date(s);
+console.log(endtime);
+//reformat the end time
+	var cs = [31,28,31,30,31,30,31,31,30,31,30,31];
+	var tempminutes = endtime.getMinutes() + duretime*1;
+	var iHour = Math.floor(tempminutes/60);
+	var remMins = tempminutes%60;
+
+	console.log(iHour,remMins);
+
+	var temphours = endtime.getHours() + iHour;
+	var idate = Math.floor(temphours/24);
+	var remHours = temphours%24;
+
+	console.log(idate,remHours);
+
+	var tempdates = endtime.getDate() + idate;
+	var iMonth,remDate;
+	
+	if(tempdates == cs[endtime.getMonth()]){
+		iMonth = 0;
+		remDate = tempdates;
+	}else{
+		if(endtime.getMonth() == 1 && (endtime.getYear()+1900)%4 == 0 ){
+				iMonth = Math.floor(tempdates/(cs[endtime.getMonth()]+1));
+				remDate = tempdates%(cs[endtime.getMonth()]+1);
+				//cs[err.getMonth()] = cs[err.getMonth()]+1;
+		}else{
+				iMonth = Math.floor(tempdates/cs[endtime.getMonth()]);
+				remDate = tempdates%cs[endtime.getMonth()];
+		}
+	}
+	
+	
+
+	console.log(tempdates,iMonth,remDate);
+
+	var tempmonth = endtime.getMonth() + iMonth;
+	var iyear = Math.floor(tempmonth/12);
+	var remmonth = tempmonth%12;
+
+	console.log(tempmonth,iyear,remmonth);
+
+	var tempyear = endtime.getYear()+iyear+1900;
+
+	remmonth = remmonth+1;
+	if(remmonth<10) {
+			remmonth = '0'+remmonth;
+	}
+	if(remDate<10) { remDate = '0'+remDate; }
+	if(remMins<10) { remMins = '0'+remMins; }
+	if(remHours<10) { remHours = '0'+remHours;}
+
+	var e = tempyear+'-'+remmonth+'-'+remDate+' '+remHours+':'+remMins;
+	console.log(e);

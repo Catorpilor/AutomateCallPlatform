@@ -6,8 +6,8 @@ var app = angular.module('myApp',['ngRoute','ngResource','ui.bootstrap'],functio
 	$interpolateProvider.startSymbol('[[');
 	$interpolateProvider.endSymbol(']]');
 });
-app.config(['$locationProvider',function($locationProvider) {
-	$locationProvider.html5Mode({
-		enable: true,
-	});
-}]);
+// app.config(['$locationProvider',function($locationProvider) {
+// 	$locationProvider.html5Mode({
+// 		enable: true,
+// 	});
+// }]);

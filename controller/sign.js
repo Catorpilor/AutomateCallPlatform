@@ -31,20 +31,21 @@ exports.checkLogin = function(req,res){
     var ep = new eventproxy();
     var username = validator.trim(req.body.username).toLowerCase();
     var password = validator.trim(req.body.password);
+    var basedPwd = new Buffer(password).toString('base64');
     if(!username || !password){
         res.status(422);
         res.render('template/login',{
             error: 'Infomation imcomplete'
         });
     }
-    
+
     ep.on('login_fail',function () {
         res.status(403);
         res.render('template/login',{
             error: 'Username/Password error'
         });
     });
-    
+
     ep.on('user_notexist',function () {
         res.status(410);
         res.render('template/login',{
@@ -65,7 +66,7 @@ exports.checkLogin = function(req,res){
             user._id = nuuid.v1();
             user.username = result[0].USERNAME;
             user.pkuserid = result[0].PK_USERINFO;
-            
+
             auth.gen_session(user,res);
             req.session.user = user;
             if( username == 'admin' ){

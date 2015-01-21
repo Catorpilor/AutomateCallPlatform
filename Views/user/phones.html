@@ -9,14 +9,14 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Phone Books
+                            Tasks Manage
                         </h1>
                         <ol class="breadcrumb clearfix">
                             <li>
                                 <i class="fa fa-dashboard"></i>  <a href="/user/{{ user }}">Dashboard</a>
                             </li>
                             <li class="active">
-                                <i class="fa fa-table"></i> Phone Manager
+                                <i class="fa fa-table"></i> Tasks Manager
                             </li>
 <!--                             <span class="pull-right"> -->
 <!--                             <li> -->
@@ -62,25 +62,27 @@
                                 <div class="panel-heading" role="tab" id="strategies">
                                     <h4 class="panel-title clearfix">
                                         <a data-toggle="collapse" data-parent="#accordion" href="#straContent" aria-expanded="true" aria-controls="straContent">
-                                            Phones
+                                            Tasks
                                         </a>
                                     <span class="pull-right">
-                                        <button type="button" class="btn btn-primary fa fa-plus" ng-click="open('sm');">&nbsp;Phone</button>
+                                        <button type="button" class="btn btn-primary fa fa-plus" ng-click="open(phone,'md');">&nbsp;Task</button>
                                     </span>
                                     </h4>
                                 </div>
                                 <div id="straContent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="strategies">
-                                    <div class="panel-body">
-                                        <div class="list-group" >
-                                            <a href="#" class="list-group-item clearfix" ng-repeat="phone in phones">
-                                                <i class="fa fa-fw fa-mobile "></i> [[phone.PHONE_NUM]]
-                                            <span class="pull-right">
-                                                <button class="btn btn-xs btn-danger" ng-click="deletePhone(phone);">
-                                                    <i class="fa fa-fw fa-trash"></i>
-                                                </button>
-                                            </span>
-                                            </a>
-                                        </div>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tr><th ng-repeat="c in columns">[[c.text]]</th></tr>
+                                            <tr  ng-repeat="row in phones" ng-class="{2:'hide', 1:'info',0:'warning'}[row.CALL_STATUS]">
+                                                <td>[[row.PHONE_NUM]]</td><td>[[row.CALL_DURATION]]</td><td>[[row.CALL_INTERVAL]]</td><td>[[row.CALL_TIMES]]</td><td>[[row.CALL_DISPLAY]]</td><td>[[row.CALL_BOOKTIME | date:'short' ]]</td>
+                                                <td>
+                                                    <div class="btn-group" ng-class="{1:'hide',2:'',0:''}[row.CALL_STATUS]" >
+                                                      <button type="button" class="btn btn-default fa fa-edit" ng-class="{2:'hide',1:'',0:''}[row.CALL_STATUS]" ng-click="open(row);"></button>
+                                                      <button type="button" class="btn btn-danger fa fa-trash-o" ng-click="deletePhone(row);"></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -95,5 +97,6 @@
 {% block postscript %}
 {% parent %}
 <script src="/js/underscore.js"></script>
+<script src="/js/task.js"></script>
 <script src="/js/controllers/phoneManageController.js"></script>
 {% endblock %}

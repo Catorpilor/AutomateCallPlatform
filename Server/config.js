@@ -1,0 +1,4 @@
+{
+  "maxmemcount":"MzA=",
+  "maxconfcount":"Mw=="
+}

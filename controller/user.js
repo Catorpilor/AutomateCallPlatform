@@ -4,48 +4,64 @@
 
 var eventproxy = require("eventproxy");
 var PhoneManager = require("../proxy/phones");
-var GroupManager = require("../proxy/groups");
+var SoundManager = require("../proxy/sounds");
 var StrategyManager = require("../proxy/strategies");
 var TaskManager = require("../proxy/tasks");
+var _ = require("lodash");
 
 
 exports.index = function(req,res,next){
     //retrive from db the current user's phones groups strategies and tasks
     var ep = new eventproxy();
     ep.fail(next);
-    ep.all('phones','groups','strategies','tasks',function (phones,groups,strategies,tasks) {
-        req.session.user.phones = phones;
-        req.session.user.groups = groups;
-        req.session.user.strategies = strategies;
-        req.session.user.tasks = tasks;
+    ep.all('phones','sounds',function (phones,sounds) {
+        var stripedPhones = _.where(phones,function(phone) {
+            return phone.CALL_STATUS*1 <=1;
+        });
+        console.log(stripedPhones);
+        req.session.user.tasks = stripedPhones;
+        req.session.user.sounds = sounds;
+        // req.session.user.groups = groups;
+        // req.session.user.strategies = strategies;
+        // req.session.user.tasks = tasks;
+        req.session.user.reports = phones;
         res.render('user/index',{
             title : 'User Dashboard',
             user : req.params.username,
-            phoneCount: phones.length,
-            groupCount: groups.length,
-            strategyCount: strategies.length,
-            taskCount: tasks.length
+            phoneCount: stripedPhones.length,
+            reportCount: phones.length
+            // groupCount: groups.length,
+            // strategyCount: strategies.length,
+            // taskCount: tasks.length
         });
     });
+
+
 
     req.getConnection(function (err,connection) {
         if(err) console.log(err);
         var pk_usernum = req.session.user.pkuserid;
         var query="select ?? from ?? where PK_USERINFO = ?";
-        var opt = [['PK_PHONENUM','PHONE_NUM','PK_USERINFO'], 'call_phonenum', pk_usernum ];
+        //var opt = [['PK_PHONENUM','PHONE_NUM','PK_USERINFO'], 'call_taskdetail', pk_usernum ];
+        var opt = [['PK_TASKDETAIL','CALL_VOICE','PHONE_NUM','CALL_DURATION','CALL_INTERVAL','CALL_TIMES','CALL_DISPLAY','CALL_ENDTIME','CALL_STATUS','CALLDETAIL_SUCCESS','CALLDETAIL_FAILED','CALL_BOOKTIME'],'call_taskdetail',pk_usernum];
         PhoneManager.getPhonesByQuery(connection, query, opt, ep.done('phones'));
+        query = "select ?? from ??";
+        opt = [['file_name','file_path','file_desc'],'call_fileinfo'];
+        SoundManager.getSoundsByQuery(connection,query,opt,ep.done('sounds'));
 
-        //query groups by pk_userinfo
-        opt = [['PK_GROUP','GROUP_NAME','GROUP_CODE'],'call_group',pk_usernum];
-        GroupManager.getGroupsByQuery(connection, query, opt, ep.done('groups'));
+        // //query groups by pk_userinfo
+        // opt = [['PK_GROUP','GROUP_NAME','GROUP_CODE'],'call_group',pk_usernum];
+        // GroupManager.getGroupsByQuery(connection, query, opt, ep.done('groups'));
 
-        //query strategies by pk_userinfo
-        opt=[['PK_TACTICS','TACTICS_NAME','CALL_DURATION','CALL_INTERVAL','CALL_TIMES','CALL_DISPLAY'],'call_tactics',pk_usernum];
-        StrategyManager.getStrategiesByQuery(connection, query, opt, ep.done('strategies'));
+        // //query strategies by pk_userinfo
+        // opt=[['PK_TACTICS','TACTICS_NAME','CALL_DURATION','CALL_INTERVAL','CALL_TIMES','CALL_DISPLAY'],'call_tactics',pk_usernum];
+        // StrategyManager.getStrategiesByQuery(connection, query, opt, ep.done('strategies'));
 
-        //query tasks by pk_userinfo
-        opt=[['PK_TASK','TASK_CODE','TASK_NAME','TASK_STATUS'],'call_task',pk_usernum];
-        TaskManager.getTasksByQuery(connection, query, opt, ep.done('tasks'));
+        // //query tasks by pk_userinfo
+        // opt=[['PK_TASK','TASK_CODE','TASK_NAME','TASK_STATUS'],'call_task',pk_usernum];
+        // TaskManager.getTasksByQuery(connection, query, opt, ep.done('tasks'));
+        //
+
 
     })
 
@@ -181,8 +197,14 @@ exports.strategyManager = function(req,res){
     });
 };
 
+exports.reportsManager = function(req, res,next) {
+    res.render('user/reports',{
+        title: 'Reports Manager',
+        user: req.params.username
+    });
+};
+
 exports.partials = function (req,res) {
     var pname = req.params.name;
     res.render('partials/'+pname);
-}
-
+};

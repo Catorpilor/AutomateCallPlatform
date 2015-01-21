@@ -1,0 +1,66 @@
+{% extends '../template/layout.html' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        Reports Manager
+                    </h1>
+                    <ol class="breadcrumb clearfix">
+                        <li>
+                            <i class="fa fa-dashboard"></i>  <a href="/user/{{ user }}">Dashboard</a>
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-tasks"></i> Reports Manager
+                        </li>
+                    </ol>
+                    <!--<span class="pull-right">-->
+                        <!--<button class="btn btn-primary">Group</button>-->
+                    <!--</span>-->
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div ng-controller="reportsManageController">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-info">
+                            <div class="panel-heading" role="tab" id="strategies">
+                                <h4 class="panel-title clearfix">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#straContent" aria-expanded="true" aria-controls="straContent">
+                                        Reports
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="straContent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="strategies">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <tr><th ng-repeat="c in columns">[[c.text]]</th></tr>
+                                        <tr ng-repeat="row in reports"  ng-class="{2:'success', 1:'info',0:''}[row.CALL_STATUS]">
+                                            <td>[[row.PHONE_NUM]]</td><td>[[row.CALL_BOOKTIME | date:'short' ]]</td><td>[[row.CALL_ENDTIME | date:'short']]</td><td>[[row.CALLDETAIL_SUCCESS]]/[[row.CALL_TIMES]]</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+<!--extra javascript file to make the buttons work-->
+
+{% block postscript %}
+{% parent %}
+<script src="/js/underscore.js"></script>
+<script src="/js/task.js"></script>
+<script src="/js/controllers/reportsManageController.js"></script>
+{% endblock %}
