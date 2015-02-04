@@ -364,13 +364,20 @@ exports.checkRegister = function(req,res,next) {
       console.log(results);
       if(results.length==0 ){
         //if not exists insert
-        var obj = {
-          USERNAME : username
-        };
-        connection.query('insert into userinfo set ?', obj,function(err,result) {
-          if(err) return next(err);
-          res.json({status:'success',pk_userid:result.insertId*1,reason:''});
-        });
+	query="select ?? from ??";
+	var opt=[['PK_GATEWAY'],'call_gateway'];
+	connection.query(query,opt,function(err,results){
+		if(err) return next(err);
+		var obj = {
+			USERNAME:username,
+			PK_GATEWAY: results[0].PK_GATEWAY
+		};
+        	var esql = connection.query('insert into userinfo set ?', obj,function(err,result) {
+         		if(err) return next(err);
+          		res.json({status:'success',pk_userid:result.insertId*1,reason:''});
+        	});
+		console.log(esql.sql);
+	});
       }else{
         res.json({status:'success',pk_userid:results[0].PK_USERINFO,reason:''});
       }
@@ -385,18 +392,35 @@ exports.getTaskLists = function(req, res, next) {
   //query from db
   req.getConnection(function(err,connection) {
     if(err) return next(err);
-    var query="select ?? from ?? where PK_USERINFO = ?";
+    var query="select ??, DATE_FORMAT(CALL_BOOKTIME,'%Y-%m-%e %H:%i:%s') as CALL_BOOKTIME from ?? where PK_USERINFO = ?";
     //var opt = [['PK_PHONENUM','PHONE_NUM','PK_USERINFO'], 'call_taskdetail', pk_usernum ];
-    var opt = [['PK_TASKDETAIL','PHONE_NUM','CALL_DURATION','CALL_INTERVAL','CALL_TIMES','CALL_DISPLAY','CALL_ENDTIME','CALL_STATUS','CALL_BOOKTIME'],'call_taskdetail',pk_usernum];
+    var opt = [['PK_TASKDETAIL','PHONE_NUM','CALL_DURATION','CALL_INTERVAL','CALL_TIMES','CALL_DISPLAY','CALL_ENDTIME','CALL_STATUS'],'call_taskdetail',pk_usernum];
     connection.query(query,opt,function(err,results) {
       if(err) return next(err);
       //get the undone tasks
-      var stripedPhones = _.where(results,function(phone) {
-        return phone.CALL_STATUS*1 <=1;
-      });
-      res.json({status:'success',tasks:stripedPhones});
+      //var stripedPhones = _.where(results,function(phone) {
+      //  return phone.CALL_STATUS*1 <=1;
+      //});
+      res.json({status:'success',tasks:results});
     });
   });
+};
+
+exports.getTask = function(req, res, next){
+	console.log("calls from app getTask by id");
+	console.log(req.params.taskid);
+	var taskid = req.params.taskid;
+	req.getConnection(function(err,connection){
+		if(err) return next(err);
+		var query="select ??, CALLDETAIL_SUCCESS+CALLDETAIL_FAILED as CALL_TIMES, DATE_FORMAT(CALL_BOOKTIME,'%Y-%m-%e %H:%i:%s') as CALL_BOOKTIME, ifnull(DATE_FORMAT(CALL_ENDTIME,'%Y-%m-%e %H:%i:%s'),'--') as CALL_ENDTIME,( SELECT count(*) from call_calldetail where call_calldetail.CALLED = call_taskdetail.PHONE_NUM ) as TOTAL_CALLTIMES from ?? where PK_TASKDETAIL = ?";
+		var opt = [['PHONE_NUM','CALL_DURATION','CALL_INTERVAL','CALL_STATUS','CALLDETAIL_SUCCESS','CALLDETAIL_FAILED'], 'call_taskdetail',taskid];
+		var sqlque = connection.query(query,opt,function(err,result){
+			if(err) return next(err);
+			console.log(result);
+			res.json({status:'succss',task:result[0]});
+		});
+		console.log(sqlque.sql);
+	});
 };
 
 exports.getTaskRecords = function(req,res,next) {
@@ -405,16 +429,16 @@ exports.getTaskRecords = function(req,res,next) {
   var pk_usernum = req.query.pk_userid;
   req.getConnection(function(err,connection) {
     if(err) return next(err);
-      var query="select ?? from ?? where PK_USERINFO = ?";
+      var query="select ??, DATE_FORMAT(CALL_BOOKTIME,'%Y-%m-%e %H:%i:%s') as CALL_BOOKTIME from ?? where PK_USERINFO = ?";
       //var opt = [['PK_PHONENUM','PHONE_NUM','PK_USERINFO'], 'call_taskdetail', pk_usernum ];
-      var opt = [['PK_TASKDETAIL','CALL_VOICE','PHONE_NUM','CALL_DURATION','CALL_INTERVAL','CALL_TIMES','CALL_DISPLAY','CALL_ENDTIME','CALL_STATUS','CALLDETAIL_SUCCESS','CALLDETAIL_FAILED','CALL_BOOKTIME'],'call_taskdetail',pk_usernum];
+      var opt = [['PK_TASKDETAIL','CALL_VOICE','PHONE_NUM','CALL_DURATION','CALL_INTERVAL','CALL_TIMES','CALL_DISPLAY','CALL_ENDTIME','CALL_STATUS','CALLDETAIL_SUCCESS','CALLDETAIL_FAILED'],'call_taskdetail',pk_usernum];
       connection.query(query,opt, function(err,results) {
         if(err) return next(err);
         //get the done tasks
-        var donetasks = _.where(results,function(task) {
-          return task.CALL_STATUS*1 == 2;
-        });
-        res.json({status:'success',records:donetasks});
+        //var donetasks = _.where(results,function(task) {
+         // return task.CALL_STATUS*1 == 2;
+        //});
+        res.json({status:'success',records:results});
       });
   });
 };
@@ -425,8 +449,8 @@ exports.getTaskDetail = function(req,res,next) {
   var taskid = req.params.taskid;
   req.getConnection(function(err, connection) {
     if(err) return next(err);
-    var query = "select ?? from ?? where CALL_REQUESTID = ?";
-    var opt = [['PK_CALLDETAIL','CALLER','CALLED','STARTTIME','ENDTIME','CALLRESULT'],'call_calldetail', taskid];
+    var query = "select ?? ,DATE_FORMAT(STARTTIME,'%Y-%m-%e %H:%i:%s') as STARTTIME, DATE_FORMAT(ENDTIME,'%Y-%m-%e %H:%i:%s') as ENDTIME from ?? where CALL_REQUESTID = ?";
+    var opt = [['PK_CALLDETAIL','CALLER','CALLED','CALLRESULT'],'call_calldetail', taskid];
     var sqlquery = connection.query(query,opt,function(err,results) {
       console.log(results);
       if(err) return next(err);
@@ -450,6 +474,7 @@ exports.addTask = function(req, res, next) {
       //specify the 1st wav file
       obj.CALL_VOICE = results[0].file_path;
       obj.CALL_VOICE_LEN = results[0].file_desc;
+      obj.CALL_NEXTTIME = req.body.CALL_BOOKTIME;
 
       //then insert into the call_taskdetail
       var sqlcon = connection.query('insert into call_taskdetail set ?', obj, function(err, result) {
@@ -463,7 +488,61 @@ exports.addTask = function(req, res, next) {
   });
 };
 
+exports.updateTask = function(req,res,next){
+	console.log('calls from app updateTask');
+	console.log(req.body);
+  req.getConnection(function(err,connection) {
+    if(err) return next(err);
+    var query="update ?? set ? where PK_TASKDETAIL = ?";
+    var t = _.pick(req.body,'CALL_DURATION','CALL_INTERVAL','CALL_TIMES','CALL_DISPLAY','PHONE_NUM','CALL_BOOKTIME');
+    //convert json date to actual date
+    var pdate = t.CALL_BOOKTIME;
+    t.CALL_NEXTTIME = new Date(pdate);
+    t.CALL_BOOKTIME = new Date(pdate);
+    var opt = ['call_taskdetail',t,req.body.PK_TASKDETAIL];
+    var dbma = connection.query(query,opt,function(err,result) {
+      if(err) return next(err);
+      console.log(result);
+      res.json({status:'success',pk_taskid:req.body.PK_TASKDETAIL});
+    });
+    console.log(dbma.sql);
+  });
+};
 
+exports.getAds = function(req, res, next){
+  console.log('calls from app getAds');
+  console.log(req.query.pk_userid,req.query.clickCount);
+  req.getConnection(function(err,connection){
+     if(err) return next(err);
+     var query = "select ?? from ads order by ads_id DESC limit 0,1";
+     var opt = [['name','pic_url','url','count']];
+     var sqlcon = connection.query(query,opt,function(err,result){
+         if(err) return next(err);
+         console.log(result);
+	 var iCount = req.query.clickCount;
+	 if(iCount<=result[0].count){
+	 	res.json({status:'success',ads:result[0]});
+	 }else{
+	 	res.json({status:'success'});
+	}
+     });
+     console.log(sqlcon.sql);
+  });
+};
 
-
+exports.addFeeds = function(req, res, next){
+  console.log('calls from app addFeeds');
+  console.log(req.body);
+  var obj = req.body;
+  req.getConnection(function(err,connection){
+     if(err) return next(err);
+     obj.create_time = new Date();
+     var query = "insert into feedbacks set ?";
+     connection.query(query,obj,function(err,result){
+        if(err) return next(err);
+	console.log(result);
+        res.json({status:'success',feed_id:result.insertId*1});
+     });
+  });
+};
 
