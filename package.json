@@ -1,0 +1,44 @@
+{
+  "name": "AutomateCallPlatform",
+  "version": "1.0.0",
+  "description": "A platefrom for automate call",
+  "main": "Server/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Catorpilor/AutomateCallPlatform.git"
+  },
+  "keywords": [
+    "automate",
+    "freeswtich",
+    "call"
+  ],
+  "dependencies": {
+    "body-parser": "^1.10.0",
+    "connect-mongo": "^0.4.1",
+    "consolidate": "0.10.0",
+    "cookie-parser": "1.3.3",
+    "cors": "2.5.2",
+    "crypto": "0.0.3",
+    "error-handler": "1.0.0",
+    "eventproxy": "0.3.1",
+    "express": "4.10.4",
+    "express-myconnection": "1.0.4",
+    "express-session": "1.9.3",
+    "lodash": "2.4.1",
+    "method-override": "2.3.0",
+    "mongoose": "3.8.20",
+    "mysql": "2.5.3",
+    "node-uuid": "1.4.2",
+    "swig": "1.4.2",
+    "validator": "3.24.0"
+  },
+  "author": "catorpilor",
+  "license": "NPL",
+  "bugs": {
+    "url": "https://github.com/Catorpilor/AutomateCallPlatform/issues"
+  },
+  "homepage": "https://github.com/Catorpilor/AutomateCallPlatform"
+}
