@@ -85,7 +85,7 @@ app.controller('phoneAddCtrl',['$scope','$location','$resource','$modalInstance'
   $scope.selsound = $scope.sounds[0];
   if( typeof(item) != "undefined"){
     $scope.phone = angular.copy(item);
-    $scope.title =  'Edit Phone Task' ;
+    $scope.title =  'Edit Task' ;
     $scope.buttonText = 'Update Task' ;
     $scope.dt = $scope.phone.CALL_NEXTTIME ? $scope.phone.CALL_NEXTTIME : new Date();
   }else{
